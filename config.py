@@ -10,4 +10,5 @@ pieces_per_puzzle = 14
 training_set_path = "./dev_set.pt"
 cycle_length = 2
 device = "cuda:0"
-steps_per_update = 100
+steps_per_update = 1000
+num_iterations = 5000000

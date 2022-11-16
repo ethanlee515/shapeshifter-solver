@@ -1,6 +1,3 @@
-training_set.pt
-dev_set.pt
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

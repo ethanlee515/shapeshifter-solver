@@ -1,9 +1,25 @@
 #!/usr/bin/env python
 
+import random
 import torch
 import torch.nn as nn
 from config import *
 from torch import Tensor
+
+def sample_piece() -> (Tensor, int, int):
+    width = random.randrange(piece_width_min, piece_width_max + 1)
+    height = random.randrange(piece_height_min, piece_height_max + 1)
+    piece = torch.zeros(piece_height_max, piece_width_max, dtype=bool, device=device)
+    piece[0:height, 0:width] = torch.rand(height, width, device=device) < 0.5
+    x = random.randrange(0, board_width - width + 1)
+    y = random.randrange(0, board_height - height + 1)
+    return piece, x, y
+
+def sample_puzzle() -> (list[(Tensor, int, int)]):
+    pieces = list()
+    for _ in range(pieces_per_puzzle):
+        pieces.append(sample_piece())
+    return pieces
 
 def add_piece(board: Tensor, piece: Tensor, x: int, y: int) -> Tensor:
     board[y:y+piece_height_max, x:x+piece_width_max] += piece[0:board_height - y, 0:board_width - x]
@@ -39,13 +55,11 @@ class ShapeshiftSolver(nn.Module):
         return self.network(net_in)
 
 if __name__ == "__main__":
-    puzzles = torch.load('training_set.pt', map_location=device)
-    print("done loading training set")
     solver = ShapeshiftSolver()
     solver.to(device)
     optim = torch.optim.Adam(solver.parameters())
-    print("entering training loop")
-    for ctr, pieces in enumerate(puzzles):
+    for ctr in range(num_iterations):
+        pieces = sample_puzzle()
         # preparing ingredients
         board = make_board(pieces)
         solution = list()
