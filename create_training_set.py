@@ -11,8 +11,8 @@ def sample_piece() -> (Tensor, int, int):
     height = random.randrange(piece_height_min, piece_height_max + 1)
     piece = torch.zeros(piece_height_max, piece_width_max, dtype=bool)
     piece[0:height, 0:width] = torch.rand(height, width) < 0.5
-    x = random.randrange(0, puzzle_width - width + 1)
-    y = random.randrange(0, puzzle_height - height + 1)
+    x = random.randrange(0, board_width - width + 1)
+    y = random.randrange(0, board_height - height + 1)
     return piece, x, y
 
 def sample_puzzle() -> (list[(Tensor, int, int)]):
@@ -22,7 +22,7 @@ def sample_puzzle() -> (list[(Tensor, int, int)]):
     return puzzle
 
 if __name__ == "__main__":
-    training_set_size = 100000
+    training_set_size = 15
     puzzles = list()
     for i in range(training_set_size):
         puzzles.append(sample_puzzle())
