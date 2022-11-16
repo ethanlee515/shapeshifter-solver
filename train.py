@@ -40,9 +40,11 @@ class ShapeshiftSolver(nn.Module):
 
 if __name__ == "__main__":
     puzzles = torch.load('training_set.pt', map_location=device)
+    print("done loading training set")
     solver = ShapeshiftSolver()
     solver.to(device)
     optim = torch.optim.Adam(solver.parameters())
+    print("entering training loop")
     for ctr, pieces in enumerate(puzzles):
         # preparing ingredients
         board = make_board(pieces)
