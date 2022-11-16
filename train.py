@@ -39,11 +39,11 @@ class ShapeshiftSolver(nn.Module):
         return self.network(net_in)
 
 if __name__ == "__main__":
-    puzzles = torch.load('dev_set.pt', map_location=device)
+    puzzles = torch.load('training_set.pt', map_location=device)
     solver = ShapeshiftSolver()
     solver.to(device)
     optim = torch.optim.Adam(solver.parameters())
-    for pieces in puzzles:
+    for ctr, pieces in enumerate(puzzles):
         # preparing ingredients
         board = make_board(pieces)
         solution = list()
@@ -56,3 +56,5 @@ if __name__ == "__main__":
         loss = torch.nn.functional.mse_loss(output, solution)
         loss.backward()
         optim.step()
+        if ctr % steps_per_update == 0:
+            print(f"current step = {ctr}; loss = {float(loss)}")
